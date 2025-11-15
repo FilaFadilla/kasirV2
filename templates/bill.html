@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kasir Web - Bill</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+<h1>BILL PEMBAYARAN</h1>
+
+<table>
+<thead>
+<tr><th>Item</th><th>QTY</th><th>Subtotal</th></tr>
+</thead>
+<tbody>
+{% for key, subtotal in detail.items() %}
+<tr>
+<td>{{ key.replace('_', ' ').title() }}</td>
+<td>{{ qty[key] }}</td>
+<td>Rp {{ "{:,}".format(subtotal) }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div class="summary">
+<p>TOTAL: Rp {{ "{:,}".format(total) }}</p>
+<p>DISKON: Rp {{ "{:,}".format(diskon) }}</p>
+<p>SUBTOTAL: Rp {{ "{:,}".format(subtotal) }}</p>
+</div>
+
+<a href="/">&larr; Kembali</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kasir Web - Input</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+<h1>Kasir</h1>
+<form method="POST">
+<table>
+<thead>
+<tr><th>Menu</th><th>Harga</th><th>Jumlah</th></tr>
+</thead>
+<tbody>
+{% for key, harga in prices.items() %}
+<tr>
+<td>{{ key.replace('_', ' ').title() }}</td>
+<td>Rp {{ "{:,}".format(harga).replace(",", ".") }}</td>
+<td><input type="number" name="{{ key }}" min="0" value="0"></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+<div class="field">
+<label>Ada yang berulang tahun? (voucher 30%)</label>
+<select name="ultah">
+<option value="n">Tidak</option>
+<option value="y">Ya</option>
+</select>
+</div>
+
+
+<button type="submit">Hitung</button>
+</form>
+</div>
+</body>
+</html>
