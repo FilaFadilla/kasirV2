@@ -1,4 +1,3 @@
 # python
 
-
-ini adalah program pertama yang saya buat tanpa bantuan dari ai sedikitpun, terima kasih
+ini adalah update dari projekku sebelumnya
