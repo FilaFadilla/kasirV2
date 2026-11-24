@@ -28,4 +28,5 @@ Then open http://127.0.0.1:5000 in your browser.
 - `static/style.css`: styling
 
 ## Screenshots
-Add screenshots of the order page and the bill here.
+![Order page](Screenshot%20at%202026-11-24%2016-35-31.png)
+![Bill page](Screenshot%20at%202026-11-24%2016-36-25.png)
