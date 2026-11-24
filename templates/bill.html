@@ -1,37 +1,71 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kasir Web - Bill</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kasir Web · Bill</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<div class="container">
-<h1>BILL PEMBAYARAN</h1>
-
-<table>
-<thead>
-<tr><th>Item</th><th>QTY</th><th>Subtotal</th></tr>
-</thead>
-<tbody>
-{% for key, subtotal in detail.items() %}
-<tr>
-<td>{{ key.replace('_', ' ').title() }}</td>
-<td>{{ qty[key] }}</td>
-<td>Rp {{ "{:,}".format(subtotal) }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-<div class="summary">
-<p>TOTAL: Rp {{ "{:,}".format(total) }}</p>
-<p>DISKON: Rp {{ "{:,}".format(diskon) }}</p>
-<p>SUBTOTAL: Rp {{ "{:,}".format(subtotal) }}</p>
-</div>
-
-<a href="/">&larr; Kembali</a>
-</div>
+{% set names = {
+  'ayam_betutu': 'Betutu Chicken',
+  'gurame_terbang': 'Flying Gourami (Fried Whole Fish)',
+  'lalapan_mentah': 'Raw Vegetable Platter',
+  'pete_goreng': 'Fried Stink Beans',
+  'plecing_kangkung': 'Water Spinach with Plecing Sambal',
+  'sambal_dadak': 'Fresh Chili Sambal'
+} %}
+  <div class="container">
+    <main class="receipt">
+      <header class="receipt-head">
+        <h1>Payment bill</h1>
+        <p>Thank you for your order</p>
+      </header>
+ 
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for key, subtotal in detail.items() %}
+          <tr>
+            <td>{{ names.get(key, key.replace('_', ' ').title()) }}</td>
+            <td>{{ qty[key] }}</td>
+            <td>Rp {{ "{:,}".format(subtotal).replace(",", ".") }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+ 
+      <div class="totals">
+        <div class="row">
+          <span>Total</span>
+          <span>Rp {{ "{:,}".format(total).replace(",", ".") }}</span>
+        </div>
+        <div class="row discount">
+          <span>Discount</span>
+          <span>− Rp {{ "{:,}".format(diskon).replace(",", ".") }}</span>
+        </div>
+        <div class="row due">
+          <span>Amount due</span>
+          <span>Rp {{ "{:,}".format(subtotal).replace(",", ".") }}</span>
+        </div>
+      </div>
+ 
+      <p class="thanks">Please keep this bill for your records.</p>
+    </main>
+ 
+    <div class="back-wrap">
+      <a href="/" class="back-link">Start a new order</a>
+    </div>
+  </div>
 </body>
 </html>
+ 

@@ -1,42 +1,99 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kasir Web - Input</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kasir Web · New order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<div class="container">
-<h1>Kasir</h1>
-<form method="POST">
-<table>
-<thead>
-<tr><th>Menu</th><th>Harga</th><th>Jumlah</th></tr>
-</thead>
-<tbody>
-{% for key, harga in prices.items() %}
-<tr>
-<td>{{ key.replace('_', ' ').title() }}</td>
-<td>Rp {{ "{:,}".format(harga).replace(",", ".") }}</td>
-<td><input type="number" name="{{ key }}" min="0" value="0"></td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-
-<div class="field">
-<label>Ada yang berulang tahun? (voucher 30%)</label>
-<select name="ultah">
-<option value="n">Tidak</option>
-<option value="y">Ya</option>
-</select>
-</div>
-
-
-<button type="submit">Hitung</button>
-</form>
-</div>
+{% set names = {
+  'ayam_betutu': 'Betutu Chicken',
+  'gurame_terbang': 'Flying Gourami (Fried Whole Fish)',
+  'lalapan_mentah': 'Raw Vegetable Platter',
+  'pete_goreng': 'Fried Stink Beans',
+  'plecing_kangkung': 'Water Spinach with Plecing Sambal',
+  'sambal_dadak': 'Fresh Chili Sambal'
+} %}
+  <div class="container">
+    <header class="page-head">
+      <h1>New order</h1>
+      <p>Choose the items and set the quantity.</p>
+    </header>
+ 
+    <form method="POST" class="sheet" id="order-form">
+      <ul class="menu">
+        {% for key, harga in prices.items() %}
+        <li class="menu-item" data-price="{{ harga }}">
+          <span class="menu-name">{{ names.get(key, key.replace('_', ' ').title()) }}</span>
+          <span class="menu-price">Rp {{ "{:,}".format(harga).replace(",", ".") }}</span>
+          <div class="stepper">
+            <button type="button" data-step="-1" aria-label="Decrease {{ names.get(key, key.replace('_', ' ').title()) }}">−</button>
+            <input type="number" name="{{ key }}" min="0" value="0" inputmode="numeric"
+                   aria-label="Quantity of {{ names.get(key, key.replace('_', ' ').title()) }}">
+            <button type="button" data-step="1" aria-label="Increase {{ names.get(key, key.replace('_', ' ').title()) }}">+</button>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+ 
+      <fieldset class="voucher">
+        <legend>Birthday voucher</legend>
+        <p class="hint">Gives 30% off the order.</p>
+        <div class="segmented">
+          <input type="radio" name="ultah" id="ultah-n" value="n" checked>
+          <label for="ultah-n">No voucher</label>
+          <input type="radio" name="ultah" id="ultah-y" value="y">
+          <label for="ultah-y">Use voucher</label>
+        </div>
+      </fieldset>
+ 
+      <div class="checkout">
+        <div class="checkout-info">
+          <small><span id="count">0</span> items · before discount</small>
+          <strong id="est">Rp 0</strong>
+        </div>
+        <button type="submit" class="btn">Calculate bill</button>
+      </div>
+    </form>
+  </div>
+ 
+  <script>
+    (function () {
+      var items = document.querySelectorAll('.menu-item');
+      var countEl = document.getElementById('count');
+      var estEl = document.getElementById('est');
+ 
+      function update() {
+        var count = 0, sum = 0;
+        items.forEach(function (li) {
+          var input = li.querySelector('input');
+          var q = Math.max(0, parseInt(input.value, 10) || 0);
+          count += q;
+          sum += q * Number(li.dataset.price);
+          li.classList.toggle('has-qty', q > 0);
+        });
+        countEl.textContent = count;
+        estEl.textContent = 'Rp ' + sum.toLocaleString('id-ID');
+      }
+ 
+      items.forEach(function (li) {
+        var input = li.querySelector('input');
+        li.querySelectorAll('button').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var q = (parseInt(input.value, 10) || 0) + Number(b.dataset.step);
+            input.value = Math.max(0, q);
+            update();
+          });
+        });
+        input.addEventListener('input', update);
+      });
+      update();
+    })();
+  </script>
 </body>
 </html>
+ 
